@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rez for Riggers and Technical Artists</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --panel-2: #1c232c;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-2: #d2a8ff;
+    --warn: #f0883e;
+    --good: #56d364;
+    --code-kw: #ff7b72;
+    --code-str: #a5d6ff;
+    --code-num: #79c0ff;
+    --code-cmt: #8b949e;
+    --code-fn: #d2a8ff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    gap: 48px;
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; gap: 12px; }
+    nav.toc { position: static !important; }
+  }
+  header.hero {
+    padding: 56px 24px 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  header.hero .inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 36px;
+    letter-spacing: -0.02em;
+  }
+  header.hero .sub {
+    color: var(--muted);
+    font-size: 17px;
+  }
+  nav.toc {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    font-size: 14px;
+    border-left: 1px solid var(--border);
+    padding-left: 16px;
+  }
+  nav.toc h3 {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11px;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  nav.toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: item;
+  }
+  nav.toc li {
+    margin: 6px 0;
+    counter-increment: item;
+  }
+  nav.toc li::before {
+    content: counter(item) ".";
+    color: var(--muted);
+    margin-right: 8px;
+  }
+  nav.toc a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  nav.toc a:hover { color: var(--accent); }
+  main { min-width: 0; padding-bottom: 80px; }
+  section { margin: 48px 0; scroll-margin-top: 24px; }
+  section:first-child { margin-top: 0; }
+  h2 {
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  h2 .num {
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 10px;
+    font-size: 22px;
+  }
+  h3 {
+    margin: 28px 0 8px;
+    font-size: 18px;
+    color: var(--text);
+  }
+  p { margin: 12px 0; }
+  a { color: var(--accent); }
+  code {
+    font-family: "JetBrains Mono", Consolas, "SF Mono", Menlo, monospace;
+    font-size: 0.92em;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  pre {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-family: "JetBrains Mono", Consolas, "SF Mono", Menlo, monospace;
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+  pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+  }
+  .kw { color: var(--code-kw); }
+  .str { color: var(--code-str); }
+  .num { color: var(--code-num); }
+  .cmt { color: var(--code-cmt); }
+  .fn { color: var(--code-fn); }
+  .callout {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout.warn { border-left-color: var(--warn); }
+  .callout.tip  { border-left-color: var(--good); }
+  .callout .label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .figure {
+    margin: 24px 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .figure svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+  .figure .caption {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  th { color: var(--muted); font-weight: 600; }
+  ul, ol { padding-left: 22px; }
+  li { margin: 4px 0; }
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+  footer {
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    padding: 24px 0;
+    text-align: center;
+  }
+  .kbd {
+    font-family: "JetBrains Mono", Consolas, monospace;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 0.85em;
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <h1>Rez for Riggers and Technical Artists</h1>
+    <div class="sub">A from-zero introduction to the package manager that makes <em>"works on my machine"</em> a solved problem.</div>
+  </div>
+</header>
+
+<div class="layout">
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#why">Why rez exists</a></li>
+    <li><a href="#package">The one concept: a package</a></li>
+    <li><a href="#flow">How rez actually runs</a></li>
+    <li><a href="#commands">commands() and the sandbox idea</a></li>
+    <li><a href="#variants">Variants: one package, many platforms</a></li>
+    <li><a href="#go">The studio go pattern</a></li>
+    <li><a href="#real">A real TA example</a></li>
+    <li><a href="#cheats">Cheatsheet</a></li>
+    <li><a href="#next">Where to go next</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================================================= -->
+<section id="why">
+<h2><span class="num">01</span>Why rez exists</h2>
+
+<p>You're a rigger or TA. You've hit at least one of these:</p>
+
+<ul>
+  <li>Show A is on <strong>Maya 2022 + Python 3.7</strong>. Show B needs <strong>Maya 2024 + Python 3.10</strong>. Both shows are active, and the lighter wants you to fix something on Show A while you're mid-sprint on Show B.</li>
+  <li>Your rig tool needs <strong>PySide2</strong>. The new pipeline tool needs <strong>PySide6</strong>. Loading both into Maya at once causes a hard crash.</li>
+  <li>You wrote a script that works on <em>your</em> machine. It crashes on the modeler's machine because their <code>maya.env</code> has a different <code>MAYA_MODULE_PATH</code>.</li>
+  <li>The pipeline TD wants to upgrade everyone's Python, but five tools haven't been ported yet, and rolling back is "complicated."</li>
+</ul>
+
+<p>The traditional studio workaround is a swarm of <code>.bat</code> files that set environment variables before launching Maya, plus a maze of <code>maya.env</code> overrides. It works until it doesn't, and when it doesn't, you debug by reading shell scripts at 2&nbsp;AM.</p>
+
+<p><strong>Rez replaces all of that with one idea:</strong> declare what your tool <em>needs</em>, and rez figures out the environment.</p>
+
+<div class="figure">
+<svg viewBox="0 0 720 240" role="img" aria-label="Two shows running side by side with rez giving each show its own resolved environment">
+  <defs>
+    <marker id="arrow1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#58a6ff" />
+    </marker>
+  </defs>
+  <!-- Left: Show A -->
+  <rect x="20" y="20" width="180" height="200" rx="8" fill="#1c232c" stroke="#30363d"/>
+  <text x="110" y="50" fill="#c9d1d9" font-family="sans-serif" font-size="14" font-weight="700" text-anchor="middle">Show A artist</text>
+  <text x="110" y="85" fill="#8b949e" font-family="sans-serif" font-size="12" text-anchor="middle">go showA</text>
+  <rect x="40" y="105" width="140" height="100" rx="4" fill="#0d1117" stroke="#30363d"/>
+  <text x="110" y="130" fill="#56d364" font-family="monospace" font-size="11" text-anchor="middle">maya-2022</text>
+  <text x="110" y="150" fill="#56d364" font-family="monospace" font-size="11" text-anchor="middle">python-3.7</text>
+  <text x="110" y="170" fill="#56d364" font-family="monospace" font-size="11" text-anchor="middle">PySide2-5.15</text>
+  <text x="110" y="190" fill="#56d364" font-family="monospace" font-size="11" text-anchor="middle">rigKit-1.4</text>
+
+  <!-- Right: Show B -->
+  <rect x="520" y="20" width="180" height="200" rx="8" fill="#1c232c" stroke="#30363d"/>
+  <text x="610" y="50" fill="#c9d1d9" font-family="sans-serif" font-size="14" font-weight="700" text-anchor="middle">Show B artist</text>
+  <text x="610" y="85" fill="#8b949e" font-family="sans-serif" font-size="12" text-anchor="middle">go showB</text>
+  <rect x="540" y="105" width="140" height="100" rx="4" fill="#0d1117" stroke="#30363d"/>
+  <text x="610" y="130" fill="#d2a8ff" font-family="monospace" font-size="11" text-anchor="middle">maya-2024</text>
+  <text x="610" y="150" fill="#d2a8ff" font-family="monospace" font-size="11" text-anchor="middle">python-3.10</text>
+  <text x="610" y="170" fill="#d2a8ff" font-family="monospace" font-size="11" text-anchor="middle">PySide6-6.5</text>
+  <text x="610" y="190" fill="#d2a8ff" font-family="monospace" font-size="11" text-anchor="middle">rigKit-2.1</text>
+
+  <!-- Middle: rez -->
+  <rect x="260" y="80" width="200" height="80" rx="40" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+  <text x="360" y="115" fill="#58a6ff" font-family="sans-serif" font-size="16" font-weight="700" text-anchor="middle">rez resolver</text>
+  <text x="360" y="138" fill="#8b949e" font-family="sans-serif" font-size="11" text-anchor="middle">picks consistent versions</text>
+
+  <!-- Arrows -->
+  <line x1="200" y1="120" x2="258" y2="120" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow1)"/>
+  <line x1="462" y1="120" x2="518" y2="120" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow1)"/>
+</svg>
+<div class="caption">Two artists. Two shows. Two completely different software stacks. Rez gives each subshell its own resolve.</div>
+</div>
+
+</section>
+
+<!-- ============================================================= -->
+<section id="package">
+<h2><span class="num">02</span>The one concept: a package</h2>
+
+<p>If you understand <strong>one</strong> thing about rez, understand this: a <strong>package</strong> is a folder that says "I am a thing. Here's what I depend on. Here's what to do to the environment when I'm active."</p>
+
+<p>On disk, every package looks the same:</p>
+
+<div class="figure">
+<svg viewBox="0 0 700 280" role="img" aria-label="rez packages directory tree">
+  <style>
+    .tree-line { stroke: #30363d; stroke-width: 1; }
+    .tree-text { font-family: "JetBrains Mono", Consolas, monospace; font-size: 13px; fill: #c9d1d9; }
+    .tree-folder { fill: #58a6ff; }
+    .tree-file { fill: #d2a8ff; }
+    .tree-muted { fill: #8b949e; }
+  </style>
+
+  <text class="tree-text tree-folder" x="20" y="25">C:\dev\rez-packages\</text>
+
+  <text class="tree-text tree-folder" x="40" y="55">├── python\</text>
+  <text class="tree-text tree-folder" x="60" y="80">│   ├── 3.8.10\</text>
+  <text class="tree-text tree-file"   x="80" y="105">│   │   └── package.py</text>
+  <text class="tree-text tree-folder" x="60" y="130">│   └── 3.12.6\</text>
+  <text class="tree-text tree-file"   x="80" y="155">│       └── package.py</text>
+
+  <text class="tree-text tree-folder" x="40" y="180">├── maya\</text>
+  <text class="tree-text tree-folder" x="60" y="205">│   └── 2024\</text>
+  <text class="tree-text tree-file"   x="80" y="230">│       └── package.py</text>
+
+  <text class="tree-text tree-folder" x="40" y="255">└── testRez\</text>
+  <text class="tree-text tree-folder" x="60" y="280">    └── 0.1.0\</text>
+
+  <text class="tree-text tree-muted" x="380" y="55">a "package family" (a name)</text>
+  <text class="tree-text tree-muted" x="380" y="80">a specific version</text>
+  <text class="tree-text tree-muted" x="380" y="105">the actual package definition</text>
+  <text class="tree-text tree-muted" x="380" y="180">multiple Maya versions can coexist</text>
+  <text class="tree-text tree-muted" x="380" y="255">your project, also a package</text>
+</svg>
+<div class="caption">The convention is rigid: <code>&lt;packages_path&gt;/&lt;name&gt;/&lt;version&gt;/package.py</code>. Multiple versions of the same package live side by side.</div>
+</div>
+
+<p>Here's the smallest useful <code>package.py</code>:</p>
+
+<pre><code><span class="kw">name</span> = <span class="str">"testRez"</span>
+<span class="kw">version</span> = <span class="str">"0.1.0"</span>
+
+<span class="kw">requires</span> = [
+    <span class="str">"python-3.8"</span>,
+]
+
+<span class="kw">def</span> <span class="fn">commands</span>():
+    env.MY_PROJECT_ROOT = <span class="str">"{root}"</span>
+    env.PYTHONPATH.append(<span class="str">"{root}/python"</span>)
+</code></pre>
+
+<p>Three things to notice:</p>
+
+<ol>
+  <li><strong><code>requires</code></strong> is a list of "what other packages I need." <code>python-3.8</code> is a version range — any <code>3.8.x</code> will satisfy it.</li>
+  <li><strong><code>commands()</code></strong> describes how the environment should change when this package is part of a resolve. Set env vars, append to <code>PYTHONPATH</code>, define aliases — same kinds of things you'd put in a <code>.bat</code> launcher, but declarative.</li>
+  <li><strong><code>{root}</code></strong> is a placeholder rez fills in with the absolute path to this package on disk at resolve time. So if your tool's source code lives at <code>{root}/python/</code>, rez puts that on <code>PYTHONPATH</code> automatically.</li>
+</ol>
+
+<div class="callout tip">
+<div class="label">TA framing</div>
+Think of <code>package.py</code> as the thing you'd hand to a new artist on day one — "here is the recipe for the environment my tool needs." Except instead of a wiki page, the recipe is executable.
+</div>
+
+</section>
+
+<!-- ============================================================= -->
+<section id="flow">
+<h2><span class="num">03</span>How rez actually runs</h2>
+
+<p>When you type <code>rez-env testRez</code> (or <code>go testRez</code> via your studio's launcher), rez does seven things in order:</p>
+
+<div class="figure">
+<svg viewBox="0 0 760 320" role="img" aria-label="Rez data flow from package files on disk to subshell">
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#8b949e" />
+    </marker>
+  </defs>
+  <style>
+    .step { fill: #1c232c; stroke: #30363d; }
+    .step-title { fill: #c9d1d9; font-family: sans-serif; font-size: 13px; font-weight: 600; text-anchor: middle; }
+    .step-desc  { fill: #8b949e; font-family: sans-serif; font-size: 11px; text-anchor: middle; }
+    .step-num   { fill: #58a6ff; font-family: sans-serif; font-size: 11px; font-weight: 700; }
+    .arrow      { stroke: #8b949e; stroke-width: 1.5; fill: none; }
+  </style>
+
+  <!-- Row 1 -->
+  <rect class="step" x="20"  y="20" width="160" height="80" rx="6"/>
+  <text class="step-num"  x="30"  y="38">01</text>
+  <text class="step-title" x="100" y="55">Discover packages</text>
+  <text class="step-desc"  x="100" y="75">scan packages_path</text>
+  <text class="step-desc"  x="100" y="90">cache metadata</text>
+
+  <rect class="step" x="220" y="20" width="160" height="80" rx="6"/>
+  <text class="step-num"  x="230" y="38">02</text>
+  <text class="step-title" x="300" y="55">Solve the request</text>
+  <text class="step-desc"  x="300" y="75">build dep graph</text>
+  <text class="step-desc"  x="300" y="90">pick consistent versions</text>
+
+  <rect class="step" x="420" y="20" width="160" height="80" rx="6"/>
+  <text class="step-num"  x="430" y="38">03</text>
+  <text class="step-title" x="500" y="55">Pick variants</text>
+  <text class="step-desc"  x="500" y="75">choose the variant</text>
+  <text class="step-desc"  x="500" y="90">matching this platform</text>
+
+  <rect class="step" x="600" y="20" width="140" height="80" rx="6" stroke="#58a6ff"/>
+  <text class="step-num"  x="610" y="38" fill="#58a6ff">04</text>
+  <text class="step-title" x="670" y="55">Build context</text>
+  <text class="step-desc"  x="670" y="75">ResolvedContext</text>
+  <text class="step-desc"  x="670" y="90">(.rxt — saveable)</text>
+
+  <!-- Row 2 -->
+  <rect class="step" x="20"  y="180" width="160" height="80" rx="6"/>
+  <text class="step-num"  x="30"  y="198">07</text>
+  <text class="step-title" x="100" y="215">Spawn subshell</text>
+  <text class="step-desc"  x="100" y="235">PowerShell / cmd / bash</text>
+  <text class="step-desc"  x="100" y="250">load the script</text>
+
+  <rect class="step" x="220" y="180" width="160" height="80" rx="6"/>
+  <text class="step-num"  x="230" y="198">06</text>
+  <text class="step-title" x="300" y="215">Transpile to shell</text>
+  <text class="step-desc"  x="300" y="235">.ps1 / .bat / .sh</text>
+  <text class="step-desc"  x="300" y="250">PATH=, $env:X = ...</text>
+
+  <rect class="step" x="420" y="180" width="160" height="80" rx="6"/>
+  <text class="step-num"  x="430" y="198">05</text>
+  <text class="step-title" x="500" y="215">Run commands()</text>
+  <text class="step-desc"  x="500" y="235">in dependency order</text>
+  <text class="step-desc"  x="500" y="250">record env mutations</text>
+
+  <rect class="step" x="600" y="180" width="140" height="80" rx="6"/>
+  <text class="step-num"  x="610" y="198">04</text>
+  <text class="step-title" x="670" y="215">(continued)</text>
+  <text class="step-desc"  x="670" y="235">passed to step 5 →</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 180 60 L 220 60" marker-end="url(#arrow2)"/>
+  <path class="arrow" d="M 380 60 L 420 60" marker-end="url(#arrow2)"/>
+  <path class="arrow" d="M 580 60 L 600 60" marker-end="url(#arrow2)"/>
+
+  <path class="arrow" d="M 670 100 L 670 180" marker-end="url(#arrow2)"/>
+  <path class="arrow" d="M 600 220 L 580 220" marker-end="url(#arrow2)"/>
+  <path class="arrow" d="M 420 220 L 380 220" marker-end="url(#arrow2)"/>
+  <path class="arrow" d="M 220 220 L 180 220" marker-end="url(#arrow2)"/>
+
+  <!-- terminal box -->
+  <text x="100" y="295" fill="#56d364" font-family="monospace" font-size="13" font-weight="700" text-anchor="middle">→ you, in a working environment</text>
+</svg>
+<div class="caption">The full trip from a folder of <code>package.py</code> files to a working interactive shell.</div>
+</div>
+
+<h3>The solve, by example</h3>
+
+<p>Say you ask for <code>testRez</code>, which itself requires <code>python-3.8</code>. The solver expands the graph:</p>
+
+<div class="figure">
+<svg viewBox="0 0 760 240" role="img" aria-label="Resolve graph showing testRez expanding into its dependencies">
+  <style>
+    .req-box { fill: #1c232c; stroke: #30363d; }
+    .req-box.user { stroke: #58a6ff; stroke-width: 2; }
+    .req-box.implicit { stroke-dasharray: 4 3; stroke: #8b949e; }
+    .req-text { font-family: monospace; font-size: 13px; fill: #c9d1d9; text-anchor: middle; }
+    .req-sub { font-family: sans-serif; font-size: 10px; fill: #8b949e; text-anchor: middle; }
+    .req-arrow { stroke: #58a6ff; stroke-width: 1.5; fill: none; }
+  </style>
+  <defs>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#58a6ff" />
+    </marker>
+  </defs>
+
+  <!-- Left: requested -->
+  <text x="120" y="22" fill="#8b949e" font-family="sans-serif" font-size="12" text-anchor="middle">YOU REQUESTED</text>
+  <rect class="req-box user" x="40" y="40" width="160" height="44" rx="6"/>
+  <text class="req-text" x="120" y="67">testRez</text>
+
+  <!-- Middle: implicit + resolved -->
+  <text x="380" y="22" fill="#8b949e" font-family="sans-serif" font-size="12" text-anchor="middle">SOLVER ADDS IMPLICIT CONSTRAINTS</text>
+  <rect class="req-box implicit" x="280" y="40" width="200" height="44" rx="6"/>
+  <text class="req-text" x="380" y="60" font-size="12">~platform==windows</text>
+  <text class="req-text" x="380" y="76" font-size="12">~arch==AMD64  ~os==…</text>
+
+  <!-- Right: resolved -->
+  <text x="640" y="22" fill="#8b949e" font-family="sans-serif" font-size="12" text-anchor="middle">RESOLVED SET</text>
+  <rect class="req-box" x="540" y="40" width="200" height="32" rx="6"/>
+  <text class="req-text" x="640" y="60">testRez-0.1.0</text>
+
+  <rect class="req-box" x="540" y="80" width="200" height="32" rx="6"/>
+  <text class="req-text" x="640" y="100">python-3.8.10</text>
+
+  <rect class="req-box" x="540" y="120" width="200" height="32" rx="6"/>
+  <text class="req-text" x="640" y="140">platform-windows</text>
+
+  <rect class="req-box" x="540" y="160" width="200" height="32" rx="6"/>
+  <text class="req-text" x="640" y="180">arch-AMD64</text>
+
+  <rect class="req-box" x="540" y="200" width="200" height="32" rx="6"/>
+  <text class="req-text" x="640" y="220">os-windows-10.0.…</text>
+
+  <!-- Arrows -->
+  <path class="req-arrow" d="M 200 62 L 280 62" marker-end="url(#arrow3)"/>
+  <path class="req-arrow" d="M 480 62 L 540 56" marker-end="url(#arrow3)"/>
+  <path class="req-arrow" d="M 480 62 L 540 96" marker-end="url(#arrow3)"/>
+  <path class="req-arrow" d="M 480 62 L 540 136" marker-end="url(#arrow3)"/>
+  <path class="req-arrow" d="M 480 62 L 540 176" marker-end="url(#arrow3)"/>
+  <path class="req-arrow" d="M 480 62 L 540 216" marker-end="url(#arrow3)"/>
+</svg>
+<div class="caption">You asked for <code>testRez</code>. The solver expanded its <code>requires</code>, added the implicit platform constraints, and produced five concrete packages.</div>
+</div>
+
+<p>The implicit <code>~platform</code>, <code>~arch</code>, <code>~os</code> constraints are why a Windows machine never accidentally resolves to a Linux variant. They're added to every resolve automatically — you don't write them.</p>
+
+</section>
+
+<!-- ============================================================= -->
+<section id="commands">
+<h2><span class="num">04</span><code>commands()</code> and the sandbox idea</h2>
+
+<p>This is the part newcomers usually trip on. <code>commands()</code> looks like a normal Python function, but it doesn't actually <em>do</em> anything when it runs. It <strong>records intentions</strong>, which rez later transpiles into your shell's native script.</p>
+
+<div class="figure">
+<svg viewBox="0 0 760 240" role="img" aria-label="commands sandbox: record then transpile then execute">
+  <defs>
+    <marker id="arrow4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#8b949e" />
+    </marker>
+  </defs>
+  <style>
+    .stage { fill: #1c232c; stroke: #30363d; }
+    .stage-title { fill: #c9d1d9; font-family: sans-serif; font-size: 13px; font-weight: 700; text-anchor: middle; }
+    .stage-code { fill: #c9d1d9; font-family: monospace; font-size: 11px; }
+  </style>
+
+  <!-- Stage 1: package.py -->
+  <rect class="stage" x="20" y="30" width="220" height="180" rx="6"/>
+  <text class="stage-title" x="130" y="55">YOUR commands()</text>
+  <text class="stage-code"  x="40" y="90"><tspan fill="#ff7b72">def</tspan> <tspan fill="#d2a8ff">commands</tspan>():</text>
+  <text class="stage-code"  x="50" y="110">env.MAYA_VER =</text>
+  <text class="stage-code"  x="50" y="125">    <tspan fill="#a5d6ff">"2024"</tspan></text>
+  <text class="stage-code"  x="50" y="145">env.PATH.prepend(</text>
+  <text class="stage-code"  x="50" y="160">    <tspan fill="#a5d6ff">"{root}/bin"</tspan>)</text>
+  <text class="stage-code"  x="50" y="180">alias(<tspan fill="#a5d6ff">"maya"</tspan>,</text>
+  <text class="stage-code"  x="50" y="195">      <tspan fill="#a5d6ff">"maya.exe"</tspan>)</text>
+
+  <!-- Stage 2: rex log -->
+  <rect class="stage" x="280" y="30" width="220" height="180" rx="6"/>
+  <text class="stage-title" x="390" y="55">REX RECORD</text>
+  <text class="stage-code"  x="300" y="90" fill="#8b949e">(rez "rex" log)</text>
+  <text class="stage-code"  x="300" y="115">setenv MAYA_VER 2024</text>
+  <text class="stage-code"  x="300" y="140">prependenv PATH</text>
+  <text class="stage-code"  x="310" y="155">  C:/.../bin</text>
+  <text class="stage-code"  x="300" y="180">alias maya =</text>
+  <text class="stage-code"  x="310" y="195">  maya.exe</text>
+
+  <!-- Stage 3: shell script -->
+  <rect class="stage" x="540" y="30" width="200" height="180" rx="6" stroke="#58a6ff"/>
+  <text class="stage-title" x="640" y="55">POWERSHELL OUTPUT</text>
+  <text class="stage-code"  x="560" y="85">$env:MAYA_VER =</text>
+  <text class="stage-code"  x="570" y="100">  <tspan fill="#a5d6ff">"2024"</tspan></text>
+  <text class="stage-code"  x="560" y="125">$env:PATH =</text>
+  <text class="stage-code"  x="570" y="140">  <tspan fill="#a5d6ff">"C:/.../bin;"</tspan></text>
+  <text class="stage-code"  x="570" y="155">  + $env:PATH</text>
+  <text class="stage-code"  x="560" y="180"><tspan fill="#ff7b72">function</tspan> maya {</text>
+  <text class="stage-code"  x="570" y="195">  &amp; maya.exe @args }</text>
+
+  <!-- Arrows between -->
+  <line x1="240" y1="120" x2="280" y2="120" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow4)"/>
+  <line x1="500" y1="120" x2="540" y2="120" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrow4)"/>
+  <text x="260" y="115" fill="#8b949e" font-family="sans-serif" font-size="10" text-anchor="middle">record</text>
+  <text x="520" y="115" fill="#58a6ff" font-family="sans-serif" font-size="10" text-anchor="middle">transpile</text>
+</svg>
+<div class="caption">The same <code>commands()</code> body produces different shell-native output depending on the target shell. Riggers can write platform-agnostic recipes; rez translates.</div>
+</div>
+
+<p>The vocabulary inside <code>commands()</code> is small:</p>
+
+<table>
+<tr><th>You write</th><th>It does</th></tr>
+<tr><td><code>env.X = "value"</code></td><td>Set env var X</td></tr>
+<tr><td><code>env.PATH.prepend("...")</code></td><td>Prepend to PATH (also <code>append</code>)</td></tr>
+<tr><td><code>env.PYTHONPATH.append("...")</code></td><td>Same idea for any list-style var</td></tr>
+<tr><td><code>alias("maya", "maya.exe")</code></td><td>Define a shell alias / function</td></tr>
+<tr><td><code>info("message")</code></td><td>Print a banner when the env loads</td></tr>
+<tr><td><code>if "maya-2024" in resolve:</code></td><td>Branch on what else is in the resolve</td></tr>
+<tr><td><code>{root}</code></td><td>Token for "this package's install dir"</td></tr>
+</table>
+
+<div class="callout warn">
+<div class="label">Common gotcha</div>
+You can't use arbitrary Python in <code>commands()</code> — file I/O, network calls, os module access, etc. won't work as you'd expect. The body is executed in a sandbox where only the rex API is "live." Treat it as a <em>config DSL that happens to look like Python</em>, not a normal script.
+</div>
+
+</section>
+
+<!-- ============================================================= -->
+<section id="variants">
+<h2><span class="num">05</span>Variants: one package, many platforms</h2>
+
+<p>A single package version can ship multiple <strong>variants</strong> — typically one per OS or per supported dependency version. Inside the version folder, each variant gets its own subdirectory:</p>
+
+<div class="figure">
+<svg viewBox="0 0 760 240" role="img" aria-label="Variant tree showing one package version with multiple platform variants">
+  <style>
+    .v-text { font-family: monospace; font-size: 13px; fill: #c9d1d9; }
+    .v-mu   { fill: #8b949e; }
+    .v-folder { fill: #58a6ff; }
+    .v-file   { fill: #d2a8ff; }
+  </style>
+
+  <text class="v-text v-folder" x="20"  y="25">rigKit\</text>
+  <text class="v-text v-folder" x="40"  y="50">└── 1.4\</text>
+  <text class="v-text v-file"   x="60"  y="75">    ├── package.py</text>
+  <text class="v-text v-mu"     x="280" y="75">declares: variants = [...]</text>
+  <text class="v-text v-folder" x="60"  y="100">    ├── platform-windows\</text>
+  <text class="v-text v-folder" x="80"  y="125">    │   └── arch-AMD64\</text>
+  <text class="v-text v-folder" x="100" y="150">    │       └── python-3.10\</text>
+  <text class="v-text v-mu"     x="380" y="150">{root} for Windows + py3.10</text>
+  <text class="v-text v-folder" x="60"  y="175">    └── platform-linux\</text>
+  <text class="v-text v-folder" x="80"  y="200">        └── arch-x86_64\</text>
+  <text class="v-text v-folder" x="100" y="225">            └── python-3.10\</text>
+  <text class="v-text v-mu"     x="400" y="225">{root} for Linux + py3.10</text>
+</svg>
+<div class="caption">The <code>variants</code> list in <code>package.py</code> tells rez "I ship pre-built copies for these specific combinations." The solver picks the matching one.</div>
+</div>
+
+<pre><code><span class="kw">name</span> = <span class="str">"rigKit"</span>
+<span class="kw">version</span> = <span class="str">"1.4"</span>
+<span class="kw">variants</span> = [
+    [<span class="str">"platform-windows"</span>, <span class="str">"arch-AMD64"</span>, <span class="str">"python-3.10"</span>],
+    [<span class="str">"platform-linux"</span>,   <span class="str">"arch-x86_64"</span>, <span class="str">"python-3.10"</span>],
+]</code></pre>
+
+<p>The big payoff: <code>{root}</code> inside <code>commands()</code> resolves to the <em>variant's</em> subdirectory, not the version's root. So your <code>PYTHONPATH.append("{root}/python")</code> magically points at the right per-platform binaries with no <code>if</code> statements.</p>
+
+</section>
+
+<!-- ============================================================= -->
+<section id="go">
+<h2><span class="num">06</span>The studio <code>go</code> pattern</h2>
+
+<p>Most studios wrap <code>rez-env</code> in a one-liner shell function so artists never type <code>rez-env</code> directly. The convention is <code>go &lt;project&gt;</code>:</p>
+
+<pre><code><span class="cmt"># PowerShell profile</span>
+<span class="kw">function</span> <span class="fn">go</span> {
+    <span class="kw">param</span>(
+        [<span class="kw">Parameter</span>(Mandatory=<span class="num">$true</span>, Position=<span class="num">0</span>)] [<span class="kw">string</span>]$Project,
+        [<span class="kw">Parameter</span>(ValueFromRemainingArguments=<span class="num">$true</span>)] [<span class="kw">string</span>[]]$Extra
+    )
+    & rez-env $Project @Extra
+}</code></pre>
+
+<p>That's the entire mechanism. <code>go showA</code> runs <code>rez-env showA</code>. <code>go showA maya-2024</code> runs <code>rez-env showA maya-2024</code> — handy when you want to swap one component on the fly.</p>
+
+<div class="callout tip">
+<div class="label">What this gives an artist</div>
+"To work on Show A, I open a terminal and type <code>go showA</code>. To work on Show B, <code>go showB</code>. I never edit a maya.env. I never set a PATH variable. The launcher gets the right Maya, the right Python, the right plugins, every time."
+</div>
+
+</section>
+
+<!-- ============================================================= -->
+<section id="real">
+<h2><span class="num">07</span>A real TA example</h2>
+
+<p>Let's make this concrete. You wrote a rig auto-build script. It's a Python package living at <code>C:\dev\autoRig\</code>. You want any artist on Show A to be able to run it inside Maya 2024.</p>
+
+<h3>Step 1 — make <code>autoRig</code> a rez package</h3>
+
+<p>Add a <code>package.py</code> at the repo root:</p>
+
+<pre><code><span class="cmt"># C:\dev\autoRig\package.py</span>
+<span class="kw">name</span> = <span class="str">"autoRig"</span>
+<span class="kw">version</span> = <span class="str">"0.1.0"</span>
+
+<span class="kw">requires</span> = [
+    <span class="str">"python-3.10"</span>,
+    <span class="str">"PySide2"</span>,
+]
+
+<span class="kw">def</span> <span class="fn">commands</span>():
+    env.PYTHONPATH.append(<span class="str">"{root}/python"</span>)
+    env.MAYA_SCRIPT_PATH.append(<span class="str">"{root}/mel"</span>)
+    env.MAYA_PLUG_IN_PATH.append(<span class="str">"{root}/plugins"</span>)</code></pre>
+
+<p>Now <code>{root}/python</code> goes on <code>PYTHONPATH</code> in any resolve that includes <code>autoRig</code>. Maya picks up your scripts and plugins automatically.</p>
+
+<h3>Step 2 — install it into the local packages dir</h3>
+
+<pre><code>cd C:\dev\autoRig
+rez-build --install</code></pre>
+
+<p>This copies your code into <code>C:\dev\rez-packages\autoRig\0.1.0\</code> (a "release" of v0.1.0). Now any other rez package can depend on it.</p>
+
+<h3>Step 3 — make <code>showA</code> depend on it</h3>
+
+<p>The Show A package definition adds <code>autoRig</code> to its <code>requires</code> list:</p>
+
+<pre><code><span class="cmt"># C:\dev\rez-packages\showA\1.0.0\package.py</span>
+<span class="kw">name</span> = <span class="str">"showA"</span>
+<span class="kw">version</span> = <span class="str">"1.0.0"</span>
+<span class="kw">requires</span> = [
+    <span class="str">"maya-2024"</span>,
+    <span class="str">"python-3.10"</span>,
+    <span class="str">"autoRig-0.1"</span>,
+]</code></pre>
+
+<h3>Step 4 — artist workflow</h3>
+
+<p>An artist on Show A opens a terminal and types:</p>
+
+<pre><code>go showA
+maya</code></pre>
+
+<p>Maya launches with <code>autoRig</code> already on every relevant path. No env files, no copy-paste setup, no "did you remember to source the show?". When you ship <code>autoRig-0.2.0</code>, Show A just bumps the version in its <code>requires</code> and every artist gets it on their next <code>go showA</code>.</p>
+
+</section>
+
+<!-- ============================================================= -->
+<section id="cheats">
+<h2><span class="num">08</span>Cheatsheet</h2>
+
+<table>
+<tr><th>Command</th><th>What it does</th></tr>
+<tr><td><code>rez search [pkg]</code></td><td>List packages matching a name (or all)</td></tr>
+<tr><td><code>rez view &lt;pkg&gt;</code></td><td>Show a package's <code>package.py</code></td></tr>
+<tr><td><code>rez-env &lt;pkgs&gt;</code></td><td>Resolve and drop into a subshell</td></tr>
+<tr><td><code>rez-env &lt;pkgs&gt; -- &lt;cmd&gt;</code></td><td>Resolve and run one command, then exit</td></tr>
+<tr><td><code>rez-env &lt;pkgs&gt; -o ctx.rxt</code></td><td>Save the resolved context to a file</td></tr>
+<tr><td><code>rez-env --input ctx.rxt</code></td><td>Re-apply a saved context exactly</td></tr>
+<tr><td><code>rez-context</code></td><td>Inside a resolve: print the current context</td></tr>
+<tr><td><code>rez-context --print-graph</code></td><td>ASCII dependency graph</td></tr>
+<tr><td><code>rez-build --install</code></td><td>Build a source package and install it locally</td></tr>
+<tr><td><code>rez-bind &lt;name&gt;</code></td><td>Auto-generate a package for a system tool</td></tr>
+<tr><td><code>rez config &lt;key&gt;</code></td><td>Inspect a configuration value</td></tr>
+<tr><td><code>rez status</code></td><td>Sanity-check rez install + config</td></tr>
+</table>
+
+</section>
+
+<!-- ============================================================= -->
+<section id="next">
+<h2><span class="num">09</span>Where to go next</h2>
+
+<ul>
+  <li><strong>Releases.</strong> <code>rez-release</code> is <code>rez-build --install</code> with version-bump and tag conventions, plus a release-target path that's usually a network share. This is how a studio publishes a new version of <code>autoRig</code> for everyone.</li>
+  <li><strong><code>rez-pip</code>.</strong> Wraps pip so any PyPI package becomes a rez package. <code>rez-pip --install requests</code> gives you a <code>requests</code> rez package.</li>
+  <li><strong>Hooks.</strong> Run code at resolve time, build time, or release time. Useful for licensing checks, logging, or auto-incrementing version stamps.</li>
+  <li><strong>Package overrides.</strong> A user can stick a <code>~/packages/showA/1.0.0-dev/package.py</code> in their personal <code>packages_path</code> and rez will prefer the dev version over the released one. Great for "try my fix" workflows.</li>
+  <li><strong>Memcached / cache backends.</strong> For large studios, the per-resolve cost matters. Rez has pluggable caches.</li>
+</ul>
+
+<p>The <a href="https://rez.readthedocs.io/">official docs</a> are the canonical reference once you're past the basics. The concepts above don't change; everything else is variations on these primitives.</p>
+
+</section>
+
+<hr>
+
+<footer>
+Generated as a personal study guide. The mental model — <em>packages, requires, commands, resolve, subshell</em> — is the whole system.
+</footer>
+
+</main>
+</div>
+
+</body>
+</html>
